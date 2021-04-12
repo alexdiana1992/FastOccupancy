@@ -6,6 +6,11 @@ Date: 2021-04-10
 Author: Who wrote it
 Maintainer: Who to complain to <yourfault@somewhere.net>
 Description: More about what it does (maybe more than one line)
-License: What license is it under?
-Imports: Rcpp (>= 1.0.6)
-LinkingTo: Rcpp, RcppArmadillo
+License: MIT + file LICENSE
+Imports: 
+    FastGP,
+    Rcpp,
+    RcppEigen,
+    RcppParallel
+LinkingTo: Rcpp, RcppArmadillo, RcppEigen, RcppParallel
+RoxygenNote: 7.1.1
