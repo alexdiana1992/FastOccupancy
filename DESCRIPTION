@@ -1,16 +1,24 @@
 Package: FastOccupancy
 Type: Package
-Title: What the package does (short line)
+Title: Fast Bayesian occupancy models
 Version: 1.0
 Date: 2021-04-10
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
+Author: Alex Diana
+Maintainer: Alex Diana <a.diana@kent.ac.uk>
+Description: Fast implementation of multi-season and multi-site Bayesian occupancy models. The model can perform estimate of spatial and temporal trends as well as estimation of covariates effects on presence and detection probability. The sampling is performed using the Polya-Gamma scheme. 
 License: MIT + file LICENSE
 Imports: 
-    FastGP,
     Rcpp,
-    RcppEigen,
-    RcppParallel
-LinkingTo: Rcpp, RcppArmadillo, RcppEigen, RcppParallel
+    RcppArmadillo,
+    magrittr,
+    FastGP,
+    ggplot2,
+    coda,
+    dplyr,
+    reshape2
+LinkingTo: Rcpp, RcppArmadillo
+SystemRequirements: GNU make
 RoxygenNote: 7.1.1
+LazyData: true
+Depends: 
+    R (>= 2.10)

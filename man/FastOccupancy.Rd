@@ -3,20 +3,26 @@
 \docType{package}
 \name{FastOccupancy}
 \alias{FastOccupancy}
-\title{foo: A package for computating the notorious bar statistic}
+\title{FastOccupancy}
 \description{
-The foo package provides three categories of important functions:
-foo, bar and baz.
+The package implements the methods to fit Bayesian occupancy models as
+described in Diana et al. (2021).
 }
-\section{FastOccupancy functions}{
-
-The foo functions ...
-}
-
 \examples{
-simulateData(Y = 3, S_years = rep(50, 3),
-             V_lambda = 2, mu_psi = 0, b_t = c(1,2,3), beta_psi_tsp = c(0,0),
-             beta_psi = c(1), X = matrix(runif(50 * 2), 50, 2), a_s_site = rnorm(50),
-              mu_p = -1, beta_p = 0)
+modelResults <- runModel(sampleData, 
+                         index_year = 1, 
+                         index_site = 2, 
+                         index_occ = 8, 
+                         index_spatial_x = 3, 
+                         index_spatial_y = 4, 
+                         covariates_psi_text = "5", 
+                         covariates_p_text = "6-7", 
+                         usingSpatial = TRUE,
+                         gridStep = .2, 
+                         nchain = 1, 
+                         nburn = 100,
+                         niter = 100) 
+                         
+plotYearlyAveragePresenceProb(modelResults)
 
 }

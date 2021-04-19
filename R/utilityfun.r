@@ -1,4 +1,3 @@
-
 ExtractCovariatesFromText <- function(covariates_text) {
   
   covariates <- sapply(strsplit(covariates_text, split = ",")[[1]], function(x){
@@ -14,7 +13,7 @@ ExtractCovariatesFromText <- function(covariates_text) {
   covariates
 }
 
-# true or false if the covaraites is categorical or numerical
+# true or false if the covariates is categorical or numerical
 ExtractClassCovariates <- function(ncov, fac_covariates, column_covariate){
   classCovariates <- rep(T, ncov)
   classCovariates[match(fac_covariates, column_covariate)] <- F
@@ -45,4 +44,12 @@ Extract_IndexesCovariates <- function(X, column_covariate, ncov, classCovariates
   }
   
   indexes_covariates
+}
+
+logit <- function(x){
+  1 / (1 + exp(-x))
+}
+
+invLogit <- function(x){
+  log(x / (1 - x))
 }
