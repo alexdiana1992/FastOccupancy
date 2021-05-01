@@ -829,3 +829,61 @@ arma::vec XpsinoYbetaz(arma::vec X_s_index, int X_centers, int ncov,
   // }
   
 }
+
+
+// [[Rcpp::export]]
+double rcpp_log_dmvnorm_fast_cpp(arma::mat &inv_S, arma::vec &diag_S, 
+                                 double sigma_s, arma::vec &x) {
+  int n = x.size();
+  
+  double term1 = (-n / 2.0) * log(2 * M_PI) - sum(log(diag_S) + log(sigma_s));
+  
+  arma::vec term2 = inv_S * x;
+  
+  // arma::vec term3 = arma::trans(x) * term2;
+  
+  // double term4 = (.5) * (1 / (sigma_s*sigma_s)) * term3[0];
+  
+  return(0);
+  // return(term1 + term4);
+}
+
+// [[Rcpp::export]]
+arma::vec sample_l_grid_cpp(arma::vec l_s_grid, double sigma_s, 
+                            arma::cube &inv_K_s_grid, arma::mat &diag_K_s_grid,
+                            double a_l_S, double b_l_S, arma::vec a_s){
+  
+  arma::vec posterior_val = arma::zeros(l_s_grid.size());
+  
+  for(int j = 0; j < l_s_grid.size(); j++){
+    // for (j in 1:length(l_s_grid)) {
+    
+    double l_s = l_s_grid[j];
+    
+    arma::mat inv_K_s_grid_j = inv_K_s_grid.subcube(arma::span(), arma::span(), arma::span(j));
+    arma::vec diag_K_s_grid_j = arma::conv_to<arma::vec>::from(diag_K_s_grid.col(j));
+    // # K_s_grid_j <- K_s_grid[,,j] * sigma_s^2
+    // # inv_K_s_grid_j <- inv_K_s_grid[,,j] / sigma_s^2
+    // # diag_K_s_grid_j <- diag_K_s_grid[,j] * sigma_s
+    
+    double loglikelihood = 0;//rcpp_log_dmvnorm_fast_cpp(inv_K_s_grid_j, diag_K_s_grid_j, 
+    //                      sigma_s, a_s);
+    
+    // loglikelihood <- rcpp_log_dmvnorm_fast(inv_K_s_grid[,,j], 
+    // diag_K_s_grid[,j], sigma_s, a_s)
+    
+    // # loglikelihood <- rcpp_log_dmvnorm_fast(1, inv_K_s_grid_j, 
+    // #                                        diag_K_s_grid_j,  a_s)
+    //     
+    // # Sigma_l <- K2(X_tilde, X_tilde, sigma_s^2, l_s) + diag(exp(-10), nrow = nrow(X_tilde))
+    //     
+    // # (loglikelihood2 <- rcpp_log_dmvnorm( Sigma_l, rep(0, X_centers), a_s, F))
+    
+    double logPrior = R::dgamma(l_s, a_l_S, 1 / b_l_S, 1);
+    
+    posterior_val[j] = logPrior + loglikelihood;
+    
+  }
+  
+  return(posterior_val);
+}

@@ -69,3 +69,11 @@ XpsinoYbetaz <- function(X_s_index, X_centers, ncov, X_cov, beta) {
     .Call('_FastOccupancy_XpsinoYbetaz', PACKAGE = 'FastOccupancy', X_s_index, X_centers, ncov, X_cov, beta)
 }
 
+rcpp_log_dmvnorm_fast_cpp <- function(inv_S, diag_S, sigma_s, x) {
+    .Call('_FastOccupancy_rcpp_log_dmvnorm_fast_cpp', PACKAGE = 'FastOccupancy', inv_S, diag_S, sigma_s, x)
+}
+
+sample_l_grid_cpp <- function(l_s_grid, sigma_s, inv_K_s_grid, diag_K_s_grid, a_l_S, b_l_S, a_s) {
+    .Call('_FastOccupancy_sample_l_grid_cpp', PACKAGE = 'FastOccupancy', l_s_grid, sigma_s, inv_K_s_grid, diag_K_s_grid, a_l_S, b_l_S, a_s)
+}
+

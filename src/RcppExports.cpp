@@ -259,6 +259,37 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// rcpp_log_dmvnorm_fast_cpp
+double rcpp_log_dmvnorm_fast_cpp(arma::mat& inv_S, arma::vec& diag_S, double sigma_s, arma::vec& x);
+RcppExport SEXP _FastOccupancy_rcpp_log_dmvnorm_fast_cpp(SEXP inv_SSEXP, SEXP diag_SSEXP, SEXP sigma_sSEXP, SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat& >::type inv_S(inv_SSEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type diag_S(diag_SSEXP);
+    Rcpp::traits::input_parameter< double >::type sigma_s(sigma_sSEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(rcpp_log_dmvnorm_fast_cpp(inv_S, diag_S, sigma_s, x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// sample_l_grid_cpp
+arma::vec sample_l_grid_cpp(arma::vec l_s_grid, double sigma_s, arma::cube& inv_K_s_grid, arma::mat& diag_K_s_grid, double a_l_S, double b_l_S, arma::vec a_s);
+RcppExport SEXP _FastOccupancy_sample_l_grid_cpp(SEXP l_s_gridSEXP, SEXP sigma_sSEXP, SEXP inv_K_s_gridSEXP, SEXP diag_K_s_gridSEXP, SEXP a_l_SSEXP, SEXP b_l_SSEXP, SEXP a_sSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::vec >::type l_s_grid(l_s_gridSEXP);
+    Rcpp::traits::input_parameter< double >::type sigma_s(sigma_sSEXP);
+    Rcpp::traits::input_parameter< arma::cube& >::type inv_K_s_grid(inv_K_s_gridSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type diag_K_s_grid(diag_K_s_gridSEXP);
+    Rcpp::traits::input_parameter< double >::type a_l_S(a_l_SSEXP);
+    Rcpp::traits::input_parameter< double >::type b_l_S(b_l_SSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type a_s(a_sSEXP);
+    rcpp_result_gen = Rcpp::wrap(sample_l_grid_cpp(l_s_grid, sigma_s, inv_K_s_grid, diag_K_s_grid, a_l_S, b_l_S, a_s));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_FastOccupancy_sample_z_cpp", (DL_FUNC) &_FastOccupancy_sample_z_cpp, 3},
@@ -278,6 +309,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_FastOccupancy_matrixProductXtOmegaX_spatial", (DL_FUNC) &_FastOccupancy_matrixProductXtOmegaX_spatial, 3},
     {"_FastOccupancy_XpsiYz", (DL_FUNC) &_FastOccupancy_XpsiYz, 3},
     {"_FastOccupancy_XpsinoYbetaz", (DL_FUNC) &_FastOccupancy_XpsinoYbetaz, 5},
+    {"_FastOccupancy_rcpp_log_dmvnorm_fast_cpp", (DL_FUNC) &_FastOccupancy_rcpp_log_dmvnorm_fast_cpp, 4},
+    {"_FastOccupancy_sample_l_grid_cpp", (DL_FUNC) &_FastOccupancy_sample_l_grid_cpp, 7},
     {NULL, NULL, 0}
 };
 

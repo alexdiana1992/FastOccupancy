@@ -3,8 +3,7 @@
 #' Model fitting
 #' 
 #' @description This function fits the occupancy model of Diana et al. (2021). 
-#' To easily display the estimates of the quantities of interest, use the functions 
-#' provided with the package.
+#' Note that in the following the parameters are described with the notations used in the paper.
 #' 
 #' @param data The data frame containing the data.
 #' @param index_year The index of the column containing the year variable.
@@ -12,7 +11,7 @@
 #' @param index_occ The index of the column containing the detections.
 #' @param index_spatial_x The index of the x coordinate of the site.
 #' @param index_spatial_y The index of the y coordinate of the site. 
-#' @param covariates_psi_text Indexes of the column of the occupancy probability. To be separated by a comma, eg. "5,6,8". "0" is not available
+#' @param covariates_psi_text Indexes of the column of the occupancy probability. To be separated by a comma, eg. "5,6,8". Set to "0" if no covariate is available
 #' @param covariates_p_text Indexes of the column of the detection probability. 
 #' @param prior_psi Prior mean for the occupancy probability
 #' @param sigma_psi Standard deviation for the prior on the occupancy probability
@@ -20,25 +19,102 @@
 #' @param sigma_p Standard deviation for the prior on the detection probability
 #' @param usingYearDetProb Should the model include year-specific detection probabilities (as opposed to a constant one)?
 #' @param usingSpatial Should the model include the auto-correlated spatial effects?
-#' @param gridStep Step of the grid to use for the auto-correlated spatial effects. Use \code{buildSpatialGrid} to show the grid for a value of \code{gridStep}.
-#' @param storeRE Should the model store the site-specific random effects for each iteration? Not suggested if the number of sites is greater than 1000.
+#' @param gridStep Step of the grid to use for the approximation of the auto-correlated spatial effects. Use \code{\link{buildSpatialGrid}} to show the grid for a value of \code{gridStep}.
+#' @param storeRE Should the model store the site-specific independent random effects for each iteration (instead of just their mean across all chain)? Not suggested if the number of sites is greater than 1000.
 #' @param nchain Number of chains.
 #' @param nburn Number of burn-in iterations.
 #' @param niter Number of (non burn-in) iterations.
+#' @param verbose Should the progress of the MCMC be printed?.
+#' @param computeGOF Should the model perform calculations of the goodness of fit?
 #' 
 #' @importFrom magrittr %>%
 #' 
 #' @export
 #' 
-#' @return A list with components:
+#' @return 
+#' A list with components:
 #' 
-#'  \code{modelResults}: A list with components:
+#' \itemize{
+#' 
+#'  \item \code{modelResults} A list with components:
 #'       
-#'       \code{beta_psi_output}: An array of dimensions \code{nchain} x \code{niter} x (number of coefficients for 
-#'       occupancy probability). The coefficients are reported in the order (year r.e., space r.e., covariates for time-space interaction,
-#'       standard covariates) 
+#'       \describe{
 #'       
-#'  \code{dataCharacteristics}: A list with components:
+#'       \item{\code{beta_psi_output}}{ An array of dimensions \code{nchain} x \code{niter} x (number of coefficients for 
+#'       occupancy probability) containing the values of the coefficients of the occupancy probability.
+#'      The coefficients are reported in the order (year r.e., space r.e., covariates for time-space interaction,
+#'       standard covariates).}
+#'       
+#'       \item{\code{eps_unique_output}}{ if \code{storeRE = T}, an array of dimensions 
+#'       \code{nchain} x \code{niter} x S containing the values of the site-specific independent random effects
+#'        of the occupancy probability. If  \code{storeRE = F}, a matrix of dimensions \code{nchain} x S 
+#'        containing the mean value of the random effect across a chain.}
+#'       
+#'       \item{\code{beta_p_output}}{ An array of dimensions \code{nchain} x \code{niter} x (number of coefficients for 
+#'       detection probability) containing the values of the coefficients of the detection probability.
+#'        The coefficients are reported in the order (intercepts, covariates).}
+#'       
+#'        \item{\code{sigma_T_output}}{ A array of dimensions \code{nchain} x \code{niter} containing the values of
+#'        \eqn{\sigma_T}.}
+#'        
+#'        \item{\code{l_T_output}}{ A array of dimensions \code{nchain} x \code{niter} containing the values of
+#'        \eqn{l_T}.}
+#'        
+#'        \item{\code{sigma_s_output}}{ A array of dimensions \code{nchain} x \code{niter} containing the values of
+#'        \eqn{\sigma_S}.}
+#'        
+#'        \item{\code{l_s_output}}{ A array of dimensions \code{nchain} x \code{niter} containing the values of
+#'        \eqn{l_S}.}
+#'        
+#'        \item{\code{sigma_eps_output}}{ A array of dimensions \code{nchain} x \code{niter} containing the values of
+#'        \eqn{\sigma_\epsilon}.}
+#'        
+#'        \item{\code{psi_mean_output}}{ A array of dimensions \code{nchain} x \code{niter} containing the values of
+#'        the occupancy index.}
+#'        
+#'        \item{\code{GOF_output}}{ A list with components:
+#'        
+#'        \describe{
+#'        
+#'        \item{  \code{gofYear_output} }{An array of dimensions \code{nchain} x \code{niter} x Y containing the values 
+#'          of the test statistics of yearly detections.}
+#'        
+#'        \item{  \code{gofSpace_output} }{An array of dimensions \code{nchain} x \code{niter} x (M), where M is the number
+#'        of regions in the approximation, containing the values of the test statistics of the detections in
+#'        each region.}
+#'        
+#'        \item{  \code{trueYearStatistics} }{ A vector containing the true values of the test statistics of the detections
+#'         in each year.}
+#'         
+#'        \item{  \code{trueSpaceStatistics} }{ A vector containing the true values of the test statistics of the detections
+#'         in each region}
+#'        
+#'        }
+#'      
+#'        }
+#'      
+#'      }
+#'      
+#'        
+#'       \item \code{dataCharacteristics}: A list with components:
+#'        
+#'       \describe{
+#'       
+#'       \item{\code{Years}}{A vector with the years.}
+#'       
+#'       \item{\code{X_tilde}}{A matrix of dimension M x 2, where M is the number of points chosen in the 
+#'       spatial approximation, with the location of the points used for the approximation. The points are
+#'       arranged in the same as order as in the coefficients vector \code{beta_psi_output}.}
+#'       
+#'       \item{\code{gridStep}}{The width of the grid chosen in the approximation.}
+#'       
+#'       \item{\code{usingSptial}}{Same as in the input.}
+#'       
+#'        \item{\code{usingYearDetProb}}{Same as in the input.}
+#'        
+#'       
+#'       }
+#'  }
 #' 
 #' @examples
 #' 
@@ -63,7 +139,8 @@ runModel <- function(data, index_year, index_site,
                      prior_p = .5, sigma_p = 2, 
                      usingYearDetProb = F,
                      usingSpatial = F, gridStep,
-                     storeRE = F,  nchain, nburn, niter){
+                     storeRE = F, nchain, nburn, niter, 
+                     verbose = T, computeGOF = T){
   
   print("Analyzing the data..")
   
@@ -389,9 +466,11 @@ runModel <- function(data, index_year, index_site,
       }
       
       if(storeRE){
-        eps_unique_output <- array(NA, dim = c(nchain, niter, S))
+        eps_unique_output <- array(NA, dim = c(nchain, niter, S),
+                                   dimnames = list(c(), c(), originalsites))
       } else {
         eps_unique_output <- matrix(0, nchain , S)
+        colnames(eps_unique_output) <- originalsites
       }
       
     }
@@ -471,10 +550,12 @@ runModel <- function(data, index_year, index_site,
       
       for (iter in seq_len(nburn + niter)) {
         
-        if(iter <= nburn){
-          print(paste0("Chain = ",chain," - Burn-in Iteration = ",iter))  
-        } else {
-          print(paste0("Chain = ",chain," - Iteration = ",iter - nburn))
+        if(verbose){
+          if(iter <= nburn){
+            print(paste0("Chain = ",chain," - Burn-in Iteration = ",iter))  
+          } else {
+            print(paste0("Chain = ",chain," - Iteration = ",iter - nburn))
+          }  
         }
         # print(paste0("l_s = ",l_s," / sigma_s = ",sigma_s,
         #              " / max(beta_psi) = ",max(abs(beta_psi[Y  + 1:X_centers]))))
@@ -540,10 +621,10 @@ runModel <- function(data, index_year, index_site,
           beta_psi_output[chain,iter - nburn,] <- beta_psi
           
           eps_unique <- eps_s[indexUniqueSite]
-          a_s_unique <- beta_psi[Y + XY_centers_unique] + 
-            eps_unique
           
           if(usingSpatial){
+            a_s_unique <- beta_psi[Y + XY_centers_unique] + 
+              eps_unique
             psi_mean_output[chain,iter - nburn,] <- computeYearEffect(Y, a_s_unique, beta_psi)  
           } else {
             psi_mean_output[chain,iter - nburn,] <- logit(beta_psi[1:Y])
@@ -567,7 +648,7 @@ runModel <- function(data, index_year, index_site,
           beta_p_output[chain,iter - nburn,] <- beta_p
           
           # GOF
-          {
+          if (computeGOF) {
             k_s_all$Present <- simulateDetections(p, z_all)
             
             detectionsByYear <- k_s_all %>% dplyr::group_by(Year) %>% 
@@ -598,7 +679,6 @@ runModel <- function(data, index_year, index_site,
   {
     
     dataCharacteristics <- list("Years" = years,
-                                "k_s" = k_s,
                                 "X_tilde" = X_tilde,
                                 "originalsites" = originalsites,
                                 "gridStep" = gridStep,
@@ -622,15 +702,15 @@ runModel <- function(data, index_year, index_site,
     
     modelOutput <- list(
       "beta_psi_output" = beta_psi_output,
-      "sigma_T_output" = sigma_T_output,
-      "GOF_output" = GOF_output,
-      "psi_mean_output" = psi_mean_output,
-      "sigma_eps_output" = sigma_eps_output,
       "eps_unique_output" = eps_unique_output,
+      "beta_p_output" = beta_p_output,
+      "sigma_T_output" = sigma_T_output,
       "l_T_output" = l_T_output,
       "sigma_s_output" = sigma_s_output,
       "l_s_output" = l_s_output,
-      "beta_p_output" = beta_p_output
+      "sigma_eps_output" = sigma_eps_output,
+      "psi_mean_output" = psi_mean_output,
+      "GOF_output" = GOF_output
     )
   }
   

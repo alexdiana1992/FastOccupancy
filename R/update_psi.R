@@ -12,11 +12,11 @@ update_psi <- function(beta_psi, X_psi, Xbeta,
   #                                  n, k, Y, X_centers, ncov_psi, numTimeSpaceCov,
   #                                  X_y_index, X_s_index)
   # list_beta_psi <- sampler_beta_parallel(beta_psi, eps_s, X_psi, b_psi, inv_B_psi,
-  # n, k, Y, X_centers, ncov_psi, numTimeSpaceCov,
-  # X_y_index, X_s_index)
+                                         # n, k, Y, X_centers, ncov_psi, numTimeSpaceCov,
+                                         # X_y_index, X_s_index)
   list_beta_psi <- sampleBetaPsi(beta_psi, eps_s, X_psi, Xbeta, b_psi, inv_B_psi,
-                                 n, k, Y, X_centers, ncov_psi, numTimeSpaceCov,
-                                 X_y_index, X_s_index)
+                                         n, k, Y, X_centers, ncov_psi, numTimeSpaceCov,
+                                         X_y_index, X_s_index)
   beta_psi <- list_beta_psi$beta
   Omega <- list_beta_psi$Omega
   

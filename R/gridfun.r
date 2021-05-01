@@ -42,7 +42,7 @@ buildGrid <- function(XY_sp, gridStep){
 
 #' Build spatial grid
 #' 
-#' @description This function shows the spatial grid in the study area for a particular value of the grid step.
+#' @description This function shows the spatial grid used in the approximation of the site-specific autocorrelated random effects for a particular value of the grid step.
 #' @param X_cov The variable containing the x coordinates of the sites.
 #' @param Y_cov The variable containing the y coordinates of the sites.
 #' @param gridStep Value of the grid step.
@@ -51,7 +51,7 @@ buildGrid <- function(XY_sp, gridStep){
 #' 
 #' @export
 #' 
-#' @return Displays of the grid with number of patches.
+#' @return Plot of the grid with number of points used in the approximation.
 #' 
 #' @examples
 #' 
@@ -95,8 +95,8 @@ buildSpatialGrid <- function(X_cov, Y_cov, gridStep){
                                                   y = X_tilde_original[,2]), color = "black", size = 3, shape = 15) +
     ggplot2::ylab("Y") + ggplot2::scale_x_continuous(name = "X") + 
     ggplot2::ggtitle(label = paste("Number of points = ",nrow(X_tilde))) +
-    ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5, size = 20),
-                   axis.title = ggplot2::element_text(size = 20, face = "bold"),
+    ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5, size = 13),
+                   axis.title = ggplot2::element_text(size = 13, face = "bold"),
                    axis.text = ggplot2::element_text(size = 13, face = "bold", angle = 90),
                    panel.grid.major = ggplot2::element_line(colour="grey", size=0.015),
                    panel.background = ggplot2::element_rect(fill = "white", color = "black")) 

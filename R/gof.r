@@ -61,6 +61,24 @@ plotGOFYearDetections <- function(modelResults) {
   
 }
 
+#' Goodness of fit of the detection in each region
+#' 
+#' @description This function performs a goodness of fit of the detection
+#' in each region as described in Diana et al. (2021).
+#' @param modelResults Output of the function \code{runModel}
+#' 
+#' @importFrom magrittr %>%
+#' 
+#' @export
+#' 
+#' @return A map with the spatial points used in the approximation. The color
+#' used varies according to wether the true value of statistcs is inside, above 
+#' or below the 95\% credible interval.
+#' 
+#' @examples
+#' 
+#' plotGOFSpaceDections(sampleResults)
+#' 
 plotGOFSpaceDections <- function(modelResults) {
   
   usingSpatial <- modelResults$dataCharacteristics$usingSpatial

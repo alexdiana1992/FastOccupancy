@@ -16,7 +16,7 @@ The traceplot with the estimate of the effective sample size.
 }
 \description{
 Traceplot of the year-specific random effects, with 
-effective sample size..
+effective sample size.
 }
 \examples{
 

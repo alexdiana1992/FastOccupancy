@@ -14,10 +14,10 @@ buildSpatialGrid(X_cov, Y_cov, gridStep)
 \item{gridStep}{Value of the grid step.}
 }
 \value{
-Displays of the grid with number of patches.
+Plot of the grid with number of points used in the approximation.
 }
 \description{
-This function shows the spatial grid in the study area for a particular value of the grid step.
+This function shows the spatial grid used in the approximation of the site-specific autocorrelated random effects for a particular value of the grid step.
 }
 \examples{
 

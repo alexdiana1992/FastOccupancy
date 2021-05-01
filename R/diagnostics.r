@@ -2,7 +2,7 @@
 #' Traceplot of the year-specific random effects
 #' 
 #' @description Traceplot of the year-specific random effects, with 
-#' effective sample size..
+#' effective sample size.
 #' 
 #' @param modelResults Output of the function \code{runModel}
 #' @param index_year Index of the year of the random effect to plot. Indexes go from 1 to the number of years.
@@ -60,6 +60,24 @@ tracePlot_OccupancyYearEffect <- function(modelResults, index_year) {
   diagnosticsPlot
 }
 
+#' Traceplot of the site-specific autocorrelated random effects
+#' 
+#' @description Traceplot of the site-specific random effects, with 
+#' effective sample size.
+#' 
+#' @param modelResults Output of the function \code{runModel}
+#' @param index_site Index of the random effect to plot. Indexes go from 1 to the number of sites in the approximation.
+#' 
+#' @importFrom magrittr %>%
+#' 
+#' @export
+#' 
+#' @return The traceplot with the estimate of the effective sample size.
+#' 
+#' @examples
+#' 
+#' tracePlot_OccupancySiteEffect(sampleResults, 1)
+#' 
 tracePlot_OccupancySiteEffect <- function(modelResults, index_site) {
   usingSpatial <- modelResults$dataCharacteristics$usingSpatial
   
@@ -113,6 +131,24 @@ tracePlot_OccupancySiteEffect <- function(modelResults, index_site) {
   
 }
 
+#' Traceplot of the covariates of the occupancy probability
+#' 
+#' @description Traceplot of the covariates coefficient, with 
+#' effective sample size.
+#' 
+#' @param modelResults Output of the function \code{runModel}
+#' @param index_cov Index of the covariate to plot. Indexes go from 1 to the number of covariate.
+#' 
+#' @importFrom magrittr %>%
+#' 
+#' @export
+#' 
+#' @return The traceplot with the estimate of the effective sample size.
+#' 
+#' @examples
+#' 
+#' tracePlot_OccupancyCovariate(sampleResults, 1)
+#' 
 tracePlot_OccupancyCovariate <- function(modelResults, index_cov) {
   beta_psi_output <- modelResults$modelOutput$beta_psi_output
   
@@ -175,14 +211,48 @@ tracePlot_OccupancyCovariate <- function(modelResults, index_cov) {
   
 }
 
-tracePlot_DetectionIntercept <- function(modelResults) {
+#' Traceplot of the intercept of the detection probability
+#' 
+#' @description Traceplot of the intercept, with 
+#' effective sample size.
+#' 
+#' @param modelResults Output of the function \code{runModel}
+#' @param index_year Index of the year to plot, in case \code{usingYearDetProb} is 
+#' set to \code{TRUE}. Indexes go from 1 to the number of years.
+#' 
+#' @importFrom magrittr %>%
+#' 
+#' @export
+#' 
+#' @return The traceplot with the estimate of the effective sample size.
+#' 
+#' @examples
+#' 
+#' tracePlot_DetectionIntercept(sampleResults, 1)
+#' 
+tracePlot_DetectionIntercept <- function(modelResults, index_year) {
+  
+  usingYearDetProb <- modelResults$dataCharacteristics$usingYearDetProb
+  
+  years <- modelResults$dataCharacteristics$Years
+  Y <- length(years)
+  
+  if(!usingYearDetProb){
+    index_year <- 1
+  } else if(index_year > Y){
+    
+    print("Index above the number of years")
+    return(NULL)  
+    
+  }
+  
   beta_p_output <- modelResults$modelOutput$beta_p_output
   
   nchain <- nrow(beta_p_output)
   niter <- ncol(beta_p_output)
   
   beta_p_output <-
-    matrix(beta_p_output[, , 1], nrow = nchain, ncol = niter)
+    matrix(beta_p_output[, , index_year], nrow = nchain, ncol = niter)
   
   beta_psi_output_long <- reshape2::melt(beta_p_output)
   
@@ -217,6 +287,24 @@ tracePlot_DetectionIntercept <- function(modelResults) {
   diagnosticsPlot
 }
 
+#' Traceplot of the covariates of the detection probability
+#' 
+#' @description Traceplot of the covariates coefficient, with 
+#' effective sample size.
+#' 
+#' @param modelResults Output of the function \code{runModel}
+#' @param index_cov Index of the covariate to plot. Indexes go from 1 to the number of covariate.
+#' 
+#' @importFrom magrittr %>%
+#' 
+#' @export
+#' 
+#' @return The traceplot with the estimate of the effective sample size.
+#' 
+#' @examples
+#' 
+#' tracePlot_DetectionCovariate(sampleResults, 1)
+#' 
 tracePlot_DetectionCovariate <- function(modelResults, index_cov) {
   beta_p_output <- modelResults$modelOutput$beta_p_output
   
@@ -230,7 +318,7 @@ tracePlot_DetectionCovariate <- function(modelResults, index_cov) {
     beta_psi_output_long <- reshape2::melt(beta_p_output)
     
     diagnosticsPlot <-
-      ggplot2::ggplot(data = beta_psi_output_long, aes(
+      ggplot2::ggplot(data = beta_psi_output_long, ggplot2::aes(
         x = Var2,
         y = value,
         group = Var1,
