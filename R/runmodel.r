@@ -457,6 +457,7 @@ runModel <- function(data, index_year, index_site,
       
       psi_mean_output <- array(NA, dim = c(nchain, niter, Y))
       indexUniqueSite <- which(!duplicated(k_s$Site))
+      namesUniqueSite <- k_s$Site[indexUniqueSite]
       
       gofYear_output <- array(NA, dim = c(nchain, niter, Y))
       if(usingSpatial){
@@ -467,10 +468,10 @@ runModel <- function(data, index_year, index_site,
       
       if(storeRE){
         eps_unique_output <- array(NA, dim = c(nchain, niter, S),
-                                   dimnames = list(c(), c(), originalsites))
+                                   dimnames = list(c(), c(), namesUniqueSite))
       } else {
         eps_unique_output <- matrix(0, nchain , S)
-        colnames(eps_unique_output) <- originalsites
+        colnames(eps_unique_output) <- namesUniqueSite
       }
       
     }
@@ -627,7 +628,7 @@ runModel <- function(data, index_year, index_site,
               eps_unique
             psi_mean_output[chain,iter - nburn,] <- computeYearEffect(Y, a_s_unique, beta_psi)  
           } else {
-            psi_mean_output[chain,iter - nburn,] <- logit(beta_psi[1:Y])
+            psi_mean_output[chain,iter - nburn,] <- logit(beta_psi[1:Y]) + mean(eps_unique)
           }
           
           if(storeRE){

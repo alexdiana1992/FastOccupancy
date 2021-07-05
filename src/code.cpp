@@ -747,7 +747,7 @@ IntegerVector findClosestPoint(arma::mat XY_sp, arma::mat X_tilde){
   for(int k = 0; k < XY_sp.n_rows; k++){
     
     double newDistance = 0;
-    double minDistance = exp(10);
+    double minDistance = exp(50);
     int bestIndex = 0;
     
     for(int i = 0; i < X_tilde.n_rows; i++){

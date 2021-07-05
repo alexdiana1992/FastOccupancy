@@ -82,21 +82,22 @@ plotSpatialSitesEffect <- function(modelResults){
     nSites <- nrow(XY_sp_unique)
     idxSite <- findClosestPoint(XY_sp_unique, X_tilde)
     SiteEffect <- sapply(1:nSites, function(i){
-      mean(beta_psi_output[,Y + idxSite[i]] + eps_unique_output[i])
+      # mean(beta_psi_output[,Y + idxSite[i]] + eps_unique_output[i])
+      median(beta_psi_output[,Y + idxSite[i]] + eps_unique_output[i])
     }) 
     
     ggplot2::ggplot() + 
       ggplot2::geom_point(data = NULL, ggplot2::aes(x = XY_sp_unique[,1],
-                                           y = XY_sp_unique[,2],  color = SiteEffect), 
-                 size = .5,
-                 alpha = .5) +
+                                                    y = XY_sp_unique[,2],  color = SiteEffect), 
+                          size = .5,
+                          alpha = .5) +
       ggplot2::xlab("") + ggplot2::ylab("") + #theme(legend.title = element_blank())
       ggplot2::scale_color_gradientn(colors = c("red", "#00FF00"),
-                            limits = c(min(SiteEffect), max(SiteEffect))) +
+                                     limits = c(min(SiteEffect), max(SiteEffect))) +
       ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5, size = 20),
-            axis.title = ggplot2::element_text(size = 20, face = "bold"),
-            axis.text = ggplot2::element_text(size = 13, face = "bold", angle = 90),
-            panel.background = ggplot2::element_rect(fill = "white", color = "black"))
+                     axis.title = ggplot2::element_text(size = 20, face = "bold"),
+                     axis.text = ggplot2::element_text(size = 13, face = "bold", angle = 90),
+                     panel.background = ggplot2::element_rect(fill = "white", color = "black"))
     
   } else {
     print("No spatial effect")

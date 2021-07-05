@@ -2,7 +2,7 @@
 title: "FastOccupancy vignette"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{my-vignette}
+  %\VignetteIndexEntry{FastOccupancy}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -20,12 +20,12 @@ library(FastOccupancy)
 ```
 
 
-The fitting is performed using the function `runModel`. The functions fits the model described in Diana et al. (2020). The following model configurations can be chosen:
+The fitting is performed using the function `runModel`. The functions fits the model described in Diana et al. (2021). The following model configurations can be chosen:
 
 
 * `usingYearDetProb`: when set to `TRUE`, this commands fits the model using year-specific intercepts for detection probabilities. If set to `FALSE`, the intercept is constant across year.
 
-* `usingSpatial`: when set to `TRUE`, this commands fits the model using spatial autocorrelated random effects for the occupancy probability (in addition to individual spatial random effects).
+* `usingSpatial`: when set to `TRUE`, this commands fits the model using spatial autocorrelated random effects for the occupancy probability (in addition to independent site-specific random effects).
 
 
 ## Data format

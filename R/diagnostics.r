@@ -1,4 +1,66 @@
 
+#' Traceplot of the occupancy index rate
+#' 
+#' @description Traceplot of the index occupancy rate, with 
+#' effective sample size.
+#' 
+#' @param modelResults Output of the function \code{runModel}
+#' @param index_year Index of the year to plot. Indexes go from 1 to the number of years.
+#' 
+#' @importFrom magrittr %>%
+#' 
+#' @export
+#' 
+#' @return The traceplot with the estimate of the effective sample size.
+#' 
+#' @examples
+#' 
+#' tracePlot_OccupancyIndexRate(sampleResults, 1)
+#' 
+tracePlot_OccupancyIndexRate <- function(modelResults, index_year) {
+  
+  psi_mean_output <- modelResults$modelOutput$psi_mean_output
+  
+  nchain <- nrow(psi_mean_output)
+  niter <- ncol(psi_mean_output)
+  
+  psi_mean_output <-
+    matrix(psi_mean_output[, , index_year], nrow = nchain, ncol = niter)
+  
+  psi_mean_output_long <- reshape2::melt(psi_mean_output)
+  
+  diagnosticsPlot <-
+    ggplot2::ggplot(data = psi_mean_output_long, ggplot2::aes(
+      x = Var2,
+      y = value,
+      group = Var1,
+      color = factor(Var1)
+    )) + ggplot2::geom_line() +
+    ggplot2::xlab("Iterations") + ggplot2::ylab("Value") +
+    ggplot2::theme(
+      plot.title = ggplot2::element_text(hjust = 0.5, size = 17),
+      axis.title = ggplot2::element_text(size = 16, face = "bold"),
+      axis.text.y = ggplot2::element_text(size = 11, face = "bold"),
+      axis.text.x = ggplot2::element_text(
+        size = 11,
+        face = "bold",
+        hjust = 1
+      ),
+      axis.line = ggplot2::element_line(colour = "black", size = 0.15),
+      # panel.grid.minor = element_line(colour="grey", size=0.15),
+      panel.grid.major = ggplot2::element_line(colour = "grey", size = 0.15),
+      panel.background = ggplot2::element_rect(fill = "white", color = "black"),
+      legend.position = "none"
+    )
+  
+  
+  plotTitle <- createPlotTitle(psi_mean_output, nchain)
+  
+  diagnosticsPlot <- diagnosticsPlot + ggplot2::ggtitle(plotTitle)
+  
+  diagnosticsPlot
+}
+
 #' Traceplot of the year-specific random effects
 #' 
 #' @description Traceplot of the year-specific random effects, with 
@@ -308,12 +370,15 @@ tracePlot_DetectionIntercept <- function(modelResults, index_year) {
 tracePlot_DetectionCovariate <- function(modelResults, index_cov) {
   beta_p_output <- modelResults$modelOutput$beta_p_output
   
-  if ((1 + index_cov) <= dim(beta_p_output)[3]) {
+  usingYearDetProb <- modelResults$dataCharacteristics$usingYearDetProb
+  p_intercepts <- ifelse(usingYearDetProb, Y, 1)
+  
+  if ((p_intercepts + index_cov) <= dim(beta_p_output)[3]) {
     nchain <- nrow(beta_p_output)
     niter <- ncol(beta_p_output)
     
     beta_p_output <-
-      matrix(beta_p_output[, , 1 + index_cov], nrow = nchain, ncol = niter)
+      matrix(beta_p_output[, , p_intercepts + index_cov], nrow = nchain, ncol = niter)
     
     beta_psi_output_long <- reshape2::melt(beta_p_output)
     

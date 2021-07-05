@@ -5,4 +5,4 @@ The package can be installed in R via typing
 
 library(devtools)
 
-install.github("alexdiana1992/FastOccupancy")
+install_github("alexdiana1992/FastOccupancy")

@@ -105,8 +105,8 @@ plotGOFSpaceDections <- function(modelResults) {
     GOF_interval <-
       ifelse(
         trueSpaceStatistics$Detections < CI_gofs[1, ],
-        "UNDER",
-        ifelse(trueSpaceStatistics$Detections > CI_gofs[2, ], "OVER", "INSIDE")
+        "OVER",
+        ifelse(trueSpaceStatistics$Detections > CI_gofs[2, ], "UNDER", "INSIDE")
       )
     
     ggplot2::ggplot(data = NULL, ggplot2::aes(x = X_tilde[, 1],
