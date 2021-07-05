@@ -1,5 +1,5 @@
 ---
-title: "FastOccupancy"
+title: "FastOccupancy vignette"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{my-vignette}
@@ -124,6 +124,3 @@ tracePlot_OccupancyYearEffect(modelResults, 1)
 * `tracePlot_DetectionIntercept`: Traceplot of the intercept of the detection probability.
 
 * `tracePlot_DetectionCovariate`: Traceplot of the covariates of the detection probability.
-
-
-
